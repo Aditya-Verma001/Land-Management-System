@@ -1,0 +1,8 @@
+<Solution>
+  <Project Path="LandTrust.API/LandTrust.API.csproj" Id="a44c49d6-985d-4cd9-92f9-2733f570a32b" />
+  <Project Path="LandTrust.Application/LandTrust.Application.csproj" Id="6956c9d0-1251-4d1d-b65e-6c3a9e5f63a6" />
+  <Project Path="LandTrust.csproj" />
+  <Project Path="LandTrust.Domain/LandTrust.Domain.csproj" Id="77345309-4869-49a9-adcd-26a95cd4e323" />
+  <Project Path="LandTrust.Infrastructure/LandTrust.Infrastructure.csproj" Id="48123813-9859-434d-8e2b-29591ae23788" />
+  <Project Path="LandTrust.Shared/LandTrust.Shared.csproj" Id="811740e1-4aeb-4c2d-a094-ae3fdfc4f2ab" />
+</Solution>
