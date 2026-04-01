@@ -32,3 +32,4 @@ C:\Users\adity\OneDrive\Desktop\C#\LandTrust\obj\Debug\net10.0\refint\LandTrust.
 C:\Users\adity\OneDrive\Desktop\C#\LandTrust\obj\Debug\net10.0\LandTrust.pdb
 C:\Users\adity\OneDrive\Desktop\C#\LandTrust\obj\Debug\net10.0\LandTrust.genruntimeconfig.cache
 C:\Users\adity\OneDrive\Desktop\C#\LandTrust\obj\Debug\net10.0\ref\LandTrust.dll
+C:\Users\adity\OneDrive\Desktop\C#\LandTrust\obj\Debug\net10.0\LandTrust.sourcelink.json

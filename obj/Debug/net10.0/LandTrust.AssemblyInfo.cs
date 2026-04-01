@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("LandTrust")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2f9bbce60115ca88e66e2b428cf6775ace323ada")]
 [assembly: System.Reflection.AssemblyProductAttribute("LandTrust")]
 [assembly: System.Reflection.AssemblyTitleAttribute("LandTrust")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

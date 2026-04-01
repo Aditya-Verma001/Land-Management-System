@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\LandTrust.Domain\LandTrust.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
