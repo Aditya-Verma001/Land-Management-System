@@ -7,7 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.5" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\LandTrust.Domain\LandTrust.Domain.csproj" />
+    <ProjectReference Include="..\LandTrust.Infrastructure\LandTrust.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

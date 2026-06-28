@@ -22,7 +22,7 @@ public class Property
 
     public double Longitude { get; private set; }
 
-    public DateTime CreatedAt { get; private set; }
+    public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
 
     public Property(
         string state,

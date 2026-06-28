@@ -7,6 +7,14 @@ namespace LandTrust.Application.Interfaces;
 
 public interface IPropertyService
 {
-    void TransferProperty(Guid propertyId, Guid sellerId, Guid buyerId);
-    CreatePropertyResponseDto CreateProperty(CreatePropertyDto request);
+    Task<string> TransferProperty(TransferRequestDto request);
+    Task<CreatePropertyResponseDto> CreateProperty(CreatePropertyDto request);
+    Task<List<PropertyHistoryDto>> GetPropertyHistory(Guid propertyId);
+
+    Task<CurrentOwnerDto?> GetCurrentOwner(Guid propertyId);
+    Task<List<PropertyHistoryDto>> GetActiveOwnerships();
+
+    Task<List<PropertyHistoryDto>> GetInactiveOwnerships();
+
+    Task<List<PropertyHistoryDto>> GetOwnershipHistory(DateTime from, DateTime to);
 }

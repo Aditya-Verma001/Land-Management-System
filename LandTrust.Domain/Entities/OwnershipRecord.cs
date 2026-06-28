@@ -6,7 +6,7 @@ namespace LandTrust.Domain.Entities;
 
 public class OwnershipRecord
 {
-    public Guid OwnershipId { get; private set; }
+    public Guid OwnershipRecordId { get; private set; }
 
     public Guid PropertyId { get; private set; }
 
@@ -20,7 +20,7 @@ public class OwnershipRecord
 
     public OwnershipRecord(Guid propertyId, Guid ownerUserId)
     {
-        OwnershipId = Guid.NewGuid();
+        OwnershipRecordId = Guid.NewGuid();
         PropertyId = propertyId;
         OwnerUserId = ownerUserId;
         FromDate = DateTime.UtcNow;

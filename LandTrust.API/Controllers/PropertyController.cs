@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using LandTrust.Application.Common;
 using LandTrust.Application.DTOs;
 using LandTrust.Application.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 
 namespace LandTrust.API.Controllers;
 
@@ -16,35 +17,55 @@ public class PropertyController : ControllerBase
     }
 
     [HttpPost("create")]
-    public IActionResult CreateProperty([FromBody] CreatePropertyDto request)
+    public async Task<IActionResult> CreateProperty([FromBody] CreatePropertyDto request)
     {
-        try
-        {
-            var result = _propertyService.CreateProperty(request);
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        var result = await _propertyService.CreateProperty(request);
+        return Ok(ApiResponse<object>.SuccessResponse(result, "Created"));
     }
 
     [HttpPost("transfer")]
-    public IActionResult TransferProperty([FromBody] TransferRequestDto request)
+    public async Task<IActionResult> TransferProperty([FromBody] TransferRequestDto request)
     {
-        try
-        {
-            _propertyService.TransferProperty(
-                request.PropertyId,
-                request.SellerId,
-                request.BuyerId
-            );
+        var result = await _propertyService.TransferProperty(request);
+        return Ok(result);
+    }
 
-            return Ok("Property transferred successfully");
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+    [HttpGet("{propertyId}/history")]
+    public async Task<IActionResult> GetHistory(Guid propertyId)
+    {
+        var result = await _propertyService.GetPropertyHistory(propertyId);
+        return Ok(result);
+    }
+
+    [HttpGet("{propertyId}/current-owner")]
+    public async Task<IActionResult> GetCurrentOwner(Guid propertyId)
+    {
+        var owner = await _propertyService.GetCurrentOwner(propertyId);
+
+        if (owner == null)
+            return NotFound("Current owner not found.");
+
+        return Ok(owner);
+    }
+
+    [HttpGet("history/active")]
+    public async Task<IActionResult> ActiveOwnerships()
+    {
+        return Ok(await _propertyService.GetActiveOwnerships());
+    }
+
+    [HttpGet("history/inactive")]
+    public async Task<IActionResult> InactiveOwnerships()
+    {
+        return Ok(await _propertyService.GetInactiveOwnerships());
+    }
+
+    [HttpGet("history/date-range")]
+    public async Task<IActionResult> OwnershipHistory(
+    DateTime from,
+    DateTime to)
+    {
+        return Ok(await _propertyService
+            .GetOwnershipHistory(from, to));
     }
 }
