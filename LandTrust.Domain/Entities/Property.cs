@@ -24,6 +24,9 @@ public class Property
 
     public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
 
+    public ICollection<OwnershipRecord> OwnershipRecords { get; private set; }
+        = new List<OwnershipRecord>();
+
     public Property(
         string state,
         string district,

@@ -4,26 +4,30 @@ using LandTrust.Domain.Entities;
 using LandTrust.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace LandTrust.Application.Services;
 
+
 public class PropertyService : IPropertyService
 {
-    
     private readonly LandTrustDbContext _context;
     private readonly ILogger<PropertyService> _logger;
+    private readonly IAuditService _auditService;
 
-public PropertyService(LandTrustDbContext context, ILogger<PropertyService> logger)
+    public PropertyService(
+        LandTrustDbContext context,
+        ILogger<PropertyService> logger,
+        IAuditService auditService)
     {
         _context = context;
         _logger = logger;
+        _auditService = auditService;
     }
 
-public async Task<string> TransferProperty(TransferRequestDto request)
+    public async Task<string> TransferProperty(TransferRequestDto request)
     {
         _logger.LogInformation("Transfer started for PropertyId: {PropertyId}", request.PropertyId);
 
@@ -62,6 +66,31 @@ public async Task<string> TransferProperty(TransferRequestDto request)
 
         await _context.SaveChangesAsync();
 
+        await _auditService.LogAsync(new AuditLogDto
+        {
+            Action = "Transfer Property",
+            Module = "Property",
+            UserId = request.SellerId,
+            PropertyId = request.PropertyId,
+            Status = "Success",
+            Remarks = $"Transferred to {request.BuyerId}"
+        });
+
+        await _auditService.LogAsync(new AuditLogDto
+        {
+            Action = "Transfer Property",
+
+            Module = "Property",
+
+            UserId = request.SellerId,
+
+            PropertyId = request.PropertyId,
+
+            Status = "Failed",
+
+            Remarks = "Property not found."
+        });
+
         _logger.LogInformation("Property transferred from {SellerId} to {BuyerId}",
         request.SellerId, request.BuyerId);
 
@@ -89,6 +118,16 @@ public async Task<string> TransferProperty(TransferRequestDto request)
         _context.OwnershipRecords.Add(ownership);
 
         await _context.SaveChangesAsync();
+
+        await _auditService.LogAsync(new AuditLogDto
+        {
+            Action = "Create Property",
+            Module = "Property",
+            UserId = request.OwnerId,
+            PropertyId = property.PropertyId,
+            Status = "Success",
+            Remarks = $"Property {property.SurveyNumber} created successfully."
+        });
 
         _logger.LogInformation("Property created successfully with Id: {PropertyId}", property.PropertyId);
 

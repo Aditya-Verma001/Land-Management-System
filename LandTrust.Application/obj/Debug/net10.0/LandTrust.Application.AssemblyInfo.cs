@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("LandTrust.Application")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5b8b965ac9804f0f62f8141568ea705200da1595")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+394b324264f3733fd01baeb637d5d4d093e47903")]
 [assembly: System.Reflection.AssemblyProductAttribute("LandTrust.Application")]
 [assembly: System.Reflection.AssemblyTitleAttribute("LandTrust.Application")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
