@@ -17,4 +17,16 @@ public interface IPropertyService
     Task<List<PropertyHistoryDto>> GetInactiveOwnerships();
 
     Task<List<PropertyHistoryDto>> GetOwnershipHistory(DateTime from, DateTime to);
+
+    Task<TransferRequestResponseDto> SubmitTransferRequest(
+    SubmitTransferRequestDto request);
+
+    Task<TransferRequestResponseDto> VerifyTransferRequest(
+        Guid requestId);
+
+    Task<TransferRequestResponseDto> ApproveTransferRequest(
+        Guid requestId);
+
+    Task<TransferRequestResponseDto> CompleteTransferRequest(
+        Guid requestId);
 }

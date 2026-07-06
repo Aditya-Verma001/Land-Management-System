@@ -14,6 +14,8 @@ public class LandTrustDbContext : DbContext
 
     public DbSet<OwnershipRecord> OwnershipRecords => Set<OwnershipRecord>();
 
+    public DbSet<TransferRequest> TransferRequests { get; set; }
+
     public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

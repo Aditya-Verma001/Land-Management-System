@@ -239,6 +239,110 @@ public class PropertyService : IPropertyService
             })
             .ToListAsync();
     }
+
+    public async Task<TransferRequestResponseDto> SubmitTransferRequest(
+    SubmitTransferRequestDto request)
+    {
+        _logger.LogInformation(
+            "Transfer Request submitted for Property {PropertyId}",
+            request.PropertyId);
+
+        // Check property exists
+        var property = await _context.Properties
+            .FirstOrDefaultAsync(x => x.PropertyId == request.PropertyId);
+
+        if (property == null)
+        {
+            return new TransferRequestResponseDto
+            {
+                Success = false,
+                Message = "Property not found"
+            };
+        }
+
+        // Check current owner
+        var owner = await _context.OwnershipRecords
+            .FirstOrDefaultAsync(x =>
+                x.PropertyId == request.PropertyId &&
+                x.IsActive);
+
+        if (owner == null || owner.OwnerUserId != request.SellerId)
+        {
+            return new TransferRequestResponseDto
+            {
+                Success = false,
+                Message = "Seller is not current owner"
+            };
+        }
+
+        // Create request
+        var transferRequest = new TransferRequest(
+            request.PropertyId,
+            request.SellerId,
+            request.BuyerId);
+
+        _context.TransferRequests.Add(transferRequest);
+
+        await _context.SaveChangesAsync();
+
+        await _auditService.LogAsync(new AuditLogDto
+        {
+            Action = "Transfer Request",
+            Module = "Transfer",
+            UserId = request.SellerId,
+            PropertyId = request.PropertyId,
+            Status = "Pending",
+            Remarks = "Transfer request submitted"
+        });
+
+        return new TransferRequestResponseDto
+        {
+            Success = true,
+            RequestId = transferRequest.RequestId,
+            Status = transferRequest.Status,
+            Message = "Transfer Request Submitted"
+        };
+    }
+
+    public async Task<TransferRequestResponseDto> VerifyTransferRequest(Guid requestId)
+    {
+        var request = await _context.TransferRequests
+            .FirstOrDefaultAsync(x => x.RequestId == requestId);
+
+        if (request == null)
+        {
+            return new TransferRequestResponseDto
+            {
+                Success = false,
+                Message = "Transfer Request not found"
+            };
+        }
+
+        request.Verify();
+
+        await _context.SaveChangesAsync();
+
+        return new TransferRequestResponseDto
+        {
+            Success = true,
+            RequestId = request.RequestId,
+            Status = request.Status,
+            Message = "Transfer Request Verified"
+        };
+    }
+
+    public async Task<TransferRequestResponseDto> VerifyTransferRequest(Guid requestId)
+    {
+        throw new NotImplementedException();
+    }
+    public async Task<TransferRequestResponseDto> ApproveTransferRequest(Guid requestId)
+    {
+        throw new NotImplementedException();
+    }
+    public async Task<TransferRequestResponseDto> CompleteTransferRequest(Guid requestId)
+    {
+        throw new NotImplementedException();
+    }
 }
 
 

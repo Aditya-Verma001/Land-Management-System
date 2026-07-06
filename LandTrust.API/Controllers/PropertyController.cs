@@ -68,4 +68,25 @@ public class PropertyController : ControllerBase
         return Ok(await _propertyService
             .GetOwnershipHistory(from, to));
     }
+
+    [HttpPost("transfer/{requestId}/verify")]
+    public async Task<IActionResult> VerifyTransfer(Guid requestId)
+    {
+        var result = await _propertyService.VerifyTransferRequest(requestId);
+        return Ok(result);
+    }
+
+    [HttpPost("transfer/{requestId}/approve")]
+    public async Task<IActionResult> ApproveTransfer(Guid requestId)
+    {
+        var result = await _propertyService.ApproveTransferRequest(requestId);
+        return Ok(result);
+    }
+
+    [HttpPost("transfer/{requestId}/complete")]
+    public async Task<IActionResult> CompleteTransfer(Guid requestId)
+    {
+        var result = await _propertyService.CompleteTransferRequest(requestId);
+        return Ok(result);
+    }
 }
