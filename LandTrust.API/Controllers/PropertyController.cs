@@ -69,17 +69,51 @@ public class PropertyController : ControllerBase
             .GetOwnershipHistory(from, to));
     }
 
+    //[HttpPost("transfer/{requestId}/verify")]
+    //public async Task<IActionResult> VerifyTransfer(
+    // Guid requestId,
+    // Guid officerId)
+    //{
+    //    return Ok(await _propertyService.VerifyTransferRequest(requestId, officerId));
+    //}
+
+    //[HttpPost("transfer/{requestId}/approve")]
+    //public async Task<IActionResult> ApproveTransfer(Guid requestId, Guid officerId, string remarks)
+    //{
+    //    var result = await _propertyService.ApproveTransferRequest(requestId, officerId, remarks);
+    //    return Ok(result);
+    //}
+
+    //[HttpPost("transfer/{requestId}/complete")]
+    //public async Task<IActionResult> CompleteTransfer(Guid requestId)
+    //{
+    //    var result = await _propertyService.CompleteTransferRequest(requestId);
+    //    return Ok(result);
+    //}
+
     [HttpPost("transfer/{requestId}/verify")]
-    public async Task<IActionResult> VerifyTransfer(Guid requestId)
+    public async Task<IActionResult> VerifyTransfer(
+    Guid requestId,
+    Guid officerId)
     {
-        var result = await _propertyService.VerifyTransferRequest(requestId);
+        var result = await _propertyService.VerifyTransferRequest(
+            requestId,
+            officerId);
+
         return Ok(result);
     }
 
     [HttpPost("transfer/{requestId}/approve")]
-    public async Task<IActionResult> ApproveTransfer(Guid requestId)
+    public async Task<IActionResult> ApproveTransfer(
+        Guid requestId,
+        Guid officerId,
+        string remarks)
     {
-        var result = await _propertyService.ApproveTransferRequest(requestId);
+        var result = await _propertyService.ApproveTransferRequest(
+            requestId,
+            officerId,
+            remarks);
+
         return Ok(result);
     }
 
@@ -87,6 +121,7 @@ public class PropertyController : ControllerBase
     public async Task<IActionResult> CompleteTransfer(Guid requestId)
     {
         var result = await _propertyService.CompleteTransferRequest(requestId);
+
         return Ok(result);
     }
 }

@@ -22,10 +22,13 @@ public interface IPropertyService
     SubmitTransferRequestDto request);
 
     Task<TransferRequestResponseDto> VerifyTransferRequest(
-        Guid requestId);
+    Guid requestId,
+    Guid officerId);
 
     Task<TransferRequestResponseDto> ApproveTransferRequest(
-        Guid requestId);
+        Guid requestId,
+        Guid officerId,
+        string remarks);
 
     Task<TransferRequestResponseDto> CompleteTransferRequest(
         Guid requestId);

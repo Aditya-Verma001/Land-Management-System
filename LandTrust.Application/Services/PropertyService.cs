@@ -304,7 +304,7 @@ public class PropertyService : IPropertyService
         };
     }
 
-    public async Task<TransferRequestResponseDto> VerifyTransferRequest(Guid requestId)
+    public async Task<TransferRequestResponseDto> VerifyTransferRequest(Guid requestId, Guid officerId)
     {
         var request = await _context.TransferRequests
             .FirstOrDefaultAsync(x => x.RequestId == requestId);
@@ -318,7 +318,7 @@ public class PropertyService : IPropertyService
             };
         }
 
-        request.Verify();
+        request.Verify(officerId); ;
 
         await _context.SaveChangesAsync();
 
@@ -331,17 +331,77 @@ public class PropertyService : IPropertyService
         };
     }
 
-    public async Task<TransferRequestResponseDto> VerifyTransferRequest(Guid requestId)
-    {
-        throw new NotImplementedException();
-    }
-    public async Task<TransferRequestResponseDto> ApproveTransferRequest(Guid requestId)
+    //public async Task<TransferRequestResponseDto> VerifyTransferRequest(Guid requestId)
+    //{
+    //    throw new NotImplementedException();
+    //}
+    public async Task<TransferRequestResponseDto> ApproveTransferRequest(Guid requestId, Guid officerId, string remarks)
     {
         throw new NotImplementedException();
     }
     public async Task<TransferRequestResponseDto> CompleteTransferRequest(Guid requestId)
     {
-        throw new NotImplementedException();
+        // Find Transfer Request
+        var request = await _context.TransferRequests
+            .FirstOrDefaultAsync(x => x.RequestId == requestId);
+
+        if (request == null)
+        {
+            return new TransferRequestResponseDto
+            {
+                Success = false,
+                Message = "Transfer Request not found"
+            };
+        }
+
+        // Find Current Owner
+        var currentOwner = await _context.OwnershipRecords
+            .FirstOrDefaultAsync(x =>
+                x.PropertyId == request.PropertyId &&
+                x.IsActive);
+
+        if (currentOwner == null)
+        {
+            return new TransferRequestResponseDto
+            {
+                Success = false,
+                Message = "Current owner not found"
+            };
+        }
+
+        // End old ownership
+        currentOwner.EndOwnership();
+
+        // Create new ownership
+        var newOwner = new OwnershipRecord(
+            request.PropertyId,
+            request.BuyerId);
+
+        _context.OwnershipRecords.Add(newOwner);
+
+        // Complete transfer
+        request.Complete();
+
+        await _context.SaveChangesAsync();
+
+        // Audit log
+        await _auditService.LogAsync(new AuditLogDto
+        {
+            Action = "Transfer Completed",
+            Module = "Transfer",
+            UserId = request.BuyerId,
+            PropertyId = request.PropertyId,
+            Status = "Success",
+            Remarks = "Ownership transferred successfully"
+        });
+
+        return new TransferRequestResponseDto
+        {
+            Success = true,
+            RequestId = request.RequestId,
+            Status = request.Status,
+            Message = "Transfer completed successfully"
+        };
     }
 }
 
