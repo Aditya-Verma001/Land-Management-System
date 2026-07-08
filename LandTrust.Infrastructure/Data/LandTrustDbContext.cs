@@ -14,7 +14,7 @@ public class LandTrustDbContext : DbContext
 
     public DbSet<OwnershipRecord> OwnershipRecords => Set<OwnershipRecord>();
 
-    public DbSet<TransferRequest> TransferRequests { get; set; }
+    public DbSet<TransferRequest> TransferRequests => Set<TransferRequest>();
 
     public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
 
@@ -44,6 +44,20 @@ public class LandTrustDbContext : DbContext
 
             entity.Property(x => x.IpAddress)
                   .HasMaxLength(50);
+        });
+
+        modelBuilder.Entity<TransferRequest>(entity =>
+        {
+            entity.HasKey(x => x.RequestId);
+
+            entity.Property(x => x.RiskLevel)
+                  .HasMaxLength(20);
+
+            entity.Property(x => x.OfficerRemarks)
+                  .HasMaxLength(500);
+
+            entity.Property(x => x.RejectionReason)
+                  .HasMaxLength(500);
         });
     }
 }

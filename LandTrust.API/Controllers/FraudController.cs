@@ -1,5 +1,6 @@
 ﻿using LandTrust.Application.DTOs;
 using LandTrust.Application.Interfaces;
+using LandTrust.Application.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LandTrust.API.Controllers;
@@ -19,7 +20,7 @@ public class FraudController : ControllerBase
     public async Task<ActionResult<FraudCheckResultDto>> Analyze(
         FraudCheckRequestDto request)
     {
-        var result = await _fraudService.AnalyzeAsync(request);
+        var result = await _fraudService.CheckFraud(request);
 
         return Ok(result);
     }

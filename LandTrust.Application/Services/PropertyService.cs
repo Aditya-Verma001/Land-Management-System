@@ -1,6 +1,7 @@
 ﻿using LandTrust.Application.DTOs;
 using LandTrust.Application.Interfaces;
 using LandTrust.Domain.Entities;
+using LandTrust.Domain.Enums;
 using LandTrust.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -16,15 +17,18 @@ public class PropertyService : IPropertyService
     private readonly LandTrustDbContext _context;
     private readonly ILogger<PropertyService> _logger;
     private readonly IAuditService _auditService;
+    private readonly IFraudDetectionService _fraudService;
 
     public PropertyService(
-        LandTrustDbContext context,
-        ILogger<PropertyService> logger,
-        IAuditService auditService)
+    LandTrustDbContext context,
+    ILogger<PropertyService> logger,
+    IAuditService auditService,
+    IFraudDetectionService fraudService)
     {
         _context = context;
         _logger = logger;
         _auditService = auditService;
+        _fraudService = fraudService;
     }
 
     public async Task<string> TransferProperty(TransferRequestDto request)
@@ -251,6 +255,18 @@ public class PropertyService : IPropertyService
         var property = await _context.Properties
             .FirstOrDefaultAsync(x => x.PropertyId == request.PropertyId);
 
+        int propertyAgeInDays = 365; // Default value
+
+        // If your Property entity has CreatedAt, use it.
+        if (property != null)
+        {
+            // Replace CreatedAt with your actual property creation date field if different.
+            // propertyAgeInDays = (DateTime.UtcNow - property.CreatedAt).Days;
+        }
+
+        int previousTransfers = await _context.OwnershipRecords
+            .CountAsync(x => x.PropertyId == request.PropertyId);
+
         if (property == null)
         {
             return new TransferRequestResponseDto
@@ -280,6 +296,37 @@ public class PropertyService : IPropertyService
             request.PropertyId,
             request.SellerId,
             request.BuyerId);
+
+        var fraudResult = await _fraudService.CheckFraud(
+            new FraudCheckRequestDto
+            {
+                PropertyId = request.PropertyId,
+                PropertyAgeInDays = propertyAgeInDays,
+                PreviousTransfers = previousTransfers
+            });
+
+        // Save fraud assessment into transfer request
+        transferRequest.SetFraudAssessment(
+            fraudResult.FraudScore);
+
+        if (fraudResult.RiskLevel == "High")
+        {
+            await _auditService.LogAsync(new AuditLogDto
+            {
+                Action = "Transfer Request",
+                Module = "Fraud Detection",
+                UserId = request.SellerId,
+                PropertyId = request.PropertyId,
+                Status = "Blocked",
+                Remarks = "High fraud risk detected"
+            });
+
+            return new TransferRequestResponseDto
+            {
+                Success = false,
+                Message = "Transfer request blocked due to high fraud risk."
+            };
+        }
 
         _context.TransferRequests.Add(transferRequest);
 
@@ -402,6 +449,27 @@ public class PropertyService : IPropertyService
             Status = request.Status,
             Message = "Transfer completed successfully"
         };
+    }
+
+    public async Task<List<PendingTransferDto>> GetPendingTransfers()
+    {
+        return await _context.TransferRequests
+            .Where(x =>
+                x.Status == TransferStatus.Initiated ||
+                x.Status == TransferStatus.Verified)
+            .OrderBy(x => x.CreatedAt)
+            .Select(x => new PendingTransferDto
+            {
+                RequestId = x.RequestId,
+                PropertyId = x.PropertyId,
+                SellerId = x.SellerId,
+                BuyerId = x.BuyerId,
+                Status = x.Status,
+                FraudScore = x.FraudScore,
+                RiskLevel = x.RiskLevel,
+                CreatedAt = x.CreatedAt
+            })
+            .ToListAsync();
     }
 }
 

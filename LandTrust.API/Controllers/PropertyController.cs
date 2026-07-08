@@ -124,4 +124,12 @@ public class PropertyController : ControllerBase
 
         return Ok(result);
     }
+
+    [HttpGet("transfer/pending")]
+    public async Task<IActionResult> GetPendingTransfers()
+    {
+        var result = await _propertyService.GetPendingTransfers();
+
+        return Ok(result);
+    }
 }

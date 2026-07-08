@@ -13,4 +13,8 @@ public class FraudCheckResultDto
     public List<string> Reasons { get; set; } = new();
 
     public string Recommendation { get; set; } = string.Empty;
+
+    public int FraudScore { get; set; }
+
+    public string RiskLevel { get; set; } = string.Empty;
 }

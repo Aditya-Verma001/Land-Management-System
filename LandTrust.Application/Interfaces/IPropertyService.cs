@@ -32,4 +32,6 @@ public interface IPropertyService
 
     Task<TransferRequestResponseDto> CompleteTransferRequest(
         Guid requestId);
+
+    Task<List<PendingTransferDto>> GetPendingTransfers();
 }

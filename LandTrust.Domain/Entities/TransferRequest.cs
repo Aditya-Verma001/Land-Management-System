@@ -37,6 +37,11 @@ public class TransferRequest
 
     public string? RejectionReason { get; private set; }
 
+    private TransferRequest()
+    {
+        // Required by EF Core
+    }
+
     public TransferRequest(Guid propertyId, Guid sellerId, Guid buyerId)
     {
         RequestId = Guid.NewGuid();

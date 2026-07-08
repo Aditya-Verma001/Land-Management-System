@@ -13,4 +13,10 @@ public class FraudCheckRequestDto
     public Guid BuyerId { get; set; }
 
     public double RequestedArea { get; set; }
+
+    public int PropertyAgeInDays { get; set; }
+
+    public int PreviousTransfers { get; set; }
+
+  
 }
