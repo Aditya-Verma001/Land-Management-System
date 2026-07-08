@@ -132,4 +132,12 @@ public class PropertyController : ControllerBase
 
         return Ok(result);
     }
+
+    [HttpGet("dashboard")]
+    public async Task<IActionResult> Dashboard()
+    {
+        var result = await _propertyService.GetDashboardAsync();
+
+        return Ok(result);
+    }
 }

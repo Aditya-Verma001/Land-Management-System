@@ -34,4 +34,6 @@ public interface IPropertyService
         Guid requestId);
 
     Task<List<PendingTransferDto>> GetPendingTransfers();
+
+    Task<OfficerDashboardDto> GetDashboardAsync();
 }

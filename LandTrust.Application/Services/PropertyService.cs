@@ -471,6 +471,33 @@ public class PropertyService : IPropertyService
             })
             .ToListAsync();
     }
+
+    public async Task<OfficerDashboardDto> GetDashboardAsync()
+    {
+        return new OfficerDashboardDto
+        {
+            PendingRequests = await _context.TransferRequests
+                .CountAsync(x => x.Status == TransferStatus.Initiated),
+
+            VerifiedRequests = await _context.TransferRequests
+                .CountAsync(x => x.Status == TransferStatus.Verified),
+
+            ApprovedRequests = await _context.TransferRequests
+                .CountAsync(x => x.Status == TransferStatus.Approved),
+
+            RejectedRequests = await _context.TransferRequests
+                .CountAsync(x => x.Status == TransferStatus.Rejected),
+
+            HighRiskRequests = await _context.TransferRequests
+                .CountAsync(x => x.RiskLevel == "High"),
+
+            MediumRiskRequests = await _context.TransferRequests
+                .CountAsync(x => x.RiskLevel == "Medium"),
+
+            LowRiskRequests = await _context.TransferRequests
+                .CountAsync(x => x.RiskLevel == "Low")
+        };
+    }
 }
 
 
