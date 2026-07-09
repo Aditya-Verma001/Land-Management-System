@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text;
 using LandTrust.Application.Common;
 using LandTrust.Application.Interfaces;
 using LandTrust.Domain.Entities;
