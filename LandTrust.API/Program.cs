@@ -1,9 +1,10 @@
+using LandTrust.Application.Common;
 using LandTrust.Application.Interfaces;
 using LandTrust.Application.Services;
+using LandTrust.Domain.Repositories;
 using LandTrust.Infrastructure.Data;
 using LandTrust.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
-using LandTrust.Domain.Repositories;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,12 +17,21 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IPropertyService, PropertyService>();
 builder.Services.AddScoped<IPropertyRepository, PropertyRepository>();
 
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+
 builder.Services.AddScoped<IFraudDetectionService, FraudDetectionService>();
 
 builder.Services.AddDbContext<LandTrustDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<IAuditService, AuditService>();
+
+builder.Services.Configure<JwtSettings>(
+    builder.Configuration.GetSection("JwtSettings"));
+
+builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 
 var app = builder.Build();
 

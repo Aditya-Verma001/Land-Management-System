@@ -16,6 +16,8 @@ public class LandTrustDbContext : DbContext
 
     public DbSet<TransferRequest> TransferRequests => Set<TransferRequest>();
 
+    public DbSet<User> Users => Set<User>();
+
     public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -58,6 +60,31 @@ public class LandTrustDbContext : DbContext
 
             entity.Property(x => x.RejectionReason)
                   .HasMaxLength(500);
+        });
+
+        modelBuilder.Entity<User>(entity =>
+        {
+            entity.HasKey(x => x.UserId);
+
+            entity.Property(x => x.FullName)
+                  .HasMaxLength(150)
+                  .IsRequired();
+
+            entity.Property(x => x.Email)
+                  .HasMaxLength(150)
+                  .IsRequired();
+
+            entity.HasIndex(x => x.Email)
+                  .IsUnique();
+
+            entity.Property(x => x.PasswordHash)
+                  .IsRequired();
+
+            entity.Property(x => x.GovernmentId)
+                  .HasMaxLength(50);
+
+            entity.Property(x => x.IsActive)
+                  .HasDefaultValue(true);
         });
     }
 }

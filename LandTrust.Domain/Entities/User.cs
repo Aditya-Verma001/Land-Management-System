@@ -14,6 +14,10 @@ public class User
 
     public string Email { get; private set; }
 
+    public string PasswordHash { get; private set; } = string.Empty;
+
+    public bool IsActive { get; private set; } = true;
+
     public string GovernmentId { get; private set; }
 
     public UserRole Role { get; private set; }
@@ -23,22 +27,30 @@ public class User
     public DateTime CreatedAt { get; private set; }
 
     public User(
-        string fullName,
-        string email,
-        string governmentId,
-        UserRole role)
+    string fullName,
+    string email,
+    string passwordHash,
+    string governmentId,
+    UserRole role)
     {
         UserId = Guid.NewGuid();
         FullName = fullName;
         Email = email;
+        PasswordHash = passwordHash;
         GovernmentId = governmentId;
         Role = role;
         CreatedAt = DateTime.UtcNow;
         IsKycVerified = false;
+        IsActive = true;
     }
 
     public void VerifyKyc()
     {
         IsKycVerified = true;
+    }
+
+    public void Deactivate()
+    {
+        IsActive = false;
     }
 }
