@@ -14,10 +14,13 @@
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.19.1" />
   </ItemGroup>
 
-  
   <ItemGroup>
     <ProjectReference Include="..\LandTrust.Domain\LandTrust.Domain.csproj" />
 	  <ProjectReference Include="..\LandTrust.Infrastructure\LandTrust.Infrastructure.csproj" />
   </ItemGroup>
+
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
 
 </Project>

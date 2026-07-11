@@ -1246,7 +1246,10 @@
         },
         "runtime": {
           "bin/placeholder/LandTrust.Application.dll": {}
-        }
+        },
+        "frameworkReferences": [
+          "Microsoft.AspNetCore.App"
+        ]
       },
       "LandTrust.Domain/1.0.0": {
         "type": "project",

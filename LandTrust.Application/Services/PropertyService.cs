@@ -8,6 +8,8 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.AspNetCore.Http;
+using System.IO;
 
 namespace LandTrust.Application.Services;
 
@@ -99,6 +101,86 @@ public class PropertyService : IPropertyService
        sellerId, request.BuyerId);
 
         return "Property transferred successfully";
+    }
+
+    public async Task<PropertyDocumentResponseDto> UploadDocument(
+    UploadPropertyDocumentDto request)
+    {
+        // Check if property exists
+        var property = await _context.Properties
+            .FirstOrDefaultAsync(x => x.PropertyId == request.PropertyId);
+
+        if (property == null)
+        {
+            return new PropertyDocumentResponseDto
+            {
+                Success = false,
+                Message = "Property not found."
+            };
+        }
+
+        // Create Uploads folder if it doesn't exist
+        var uploadFolder = Path.Combine(
+            Directory.GetCurrentDirectory(),
+            "Uploads");
+
+        if (!Directory.Exists(uploadFolder))
+        {
+            Directory.CreateDirectory(uploadFolder);
+        }
+
+        // Generate unique filename
+        var uniqueFileName =
+            Guid.NewGuid() +
+            Path.GetExtension(request.File.FileName);
+
+        var filePath = Path.Combine(uploadFolder, uniqueFileName);
+
+        // Save file
+        using (var stream = new FileStream(filePath, FileMode.Create))
+        {
+            await request.File.CopyToAsync(stream);
+        }
+
+        // Create document entity
+        var document = new PropertyDocument(
+         request.PropertyId,
+        request.File.FileName,
+        filePath,
+        request.File.ContentType,
+        request.File.Length);
+
+        await _context.PropertyDocuments.AddAsync(document);
+        await _context.SaveChangesAsync();
+
+        return new PropertyDocumentResponseDto
+        {
+            Success = true,
+            DocumentId = document.DocumentId,
+            FileName = document.FileName,
+            Message = "Document uploaded successfully."
+        };
+    }
+
+    public async Task<FileDownloadDto?> DownloadDocument(Guid documentId)
+    {
+        var document = await _context.PropertyDocuments
+            .FirstOrDefaultAsync(x => x.DocumentId == documentId);
+
+        if (document == null)
+            return null;
+
+        if (!File.Exists(document.FilePath))
+            return null;
+
+        var fileBytes = await File.ReadAllBytesAsync(document.FilePath);
+
+        return new FileDownloadDto
+        {
+            FileBytes = fileBytes,
+            FileName = document.FileName,
+            ContentType = document.ContentType
+        };
     }
 
     public async Task<CreatePropertyResponseDto> CreateProperty(CreatePropertyDto request)
@@ -497,6 +579,48 @@ public class PropertyService : IPropertyService
             LowRiskRequests = await _context.TransferRequests
                 .CountAsync(x => x.RiskLevel == "Low")
         };
+    }
+
+    public async Task<List<PropertyListDto>> SearchProperties(PropertySearchDto request)
+    {
+        var query = _context.Properties.AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(request.State))
+        {
+            query = query.Where(x => x.State.Contains(request.State));
+        }
+
+        if (!string.IsNullOrWhiteSpace(request.District))
+        {
+            query = query.Where(x => x.District.Contains(request.District));
+        }
+
+        if (!string.IsNullOrWhiteSpace(request.Village))
+        {
+            query = query.Where(x => x.Village.Contains(request.Village));
+        }
+
+        if (!string.IsNullOrWhiteSpace(request.SurveyNumber))
+        {
+            query = query.Where(x => x.SurveyNumber.Contains(request.SurveyNumber));
+        }
+
+        query = query
+            .OrderBy(x => x.CreatedAt)
+            .Skip((request.PageNumber - 1) * request.PageSize)
+            .Take(request.PageSize);
+
+        return await query
+            .Select(x => new PropertyListDto
+            {
+                PropertyId = x.PropertyId,
+                State = x.State,
+                District = x.District,
+                Village = x.Village,
+                SurveyNumber = x.SurveyNumber,
+                Area = x.Area
+            })
+            .ToListAsync();
     }
 }
 

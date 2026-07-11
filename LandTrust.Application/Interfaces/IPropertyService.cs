@@ -36,4 +36,11 @@ public interface IPropertyService
     Task<List<PendingTransferDto>> GetPendingTransfers();
 
     Task<OfficerDashboardDto> GetDashboardAsync();
+
+    Task<PropertyDocumentResponseDto> UploadDocument(
+    UploadPropertyDocumentDto request);
+
+    Task<FileDownloadDto?> DownloadDocument(Guid documentId);
+
+    Task<List<PropertyListDto>> SearchProperties(PropertySearchDto request);
 }

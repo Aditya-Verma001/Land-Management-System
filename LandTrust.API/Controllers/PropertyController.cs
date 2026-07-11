@@ -28,7 +28,33 @@ public class PropertyController : ControllerBase
         return Ok(ApiResponse<object>.SuccessResponse(result, "Created"));
     }
 
-   
+    [HttpPost("upload-document")]
+    public async Task<IActionResult> UploadDocument(
+    [FromForm] UploadPropertyDocumentDto request)
+    {
+        var result = await _propertyService.UploadDocument(request);
+
+        if (!result.Success)
+            return BadRequest(result);
+
+        return Ok(result);
+    }
+
+    [HttpGet("download-document/{documentId}")]
+    public async Task<IActionResult> DownloadDocument(Guid documentId)
+    {
+        var file = await _propertyService.DownloadDocument(documentId);
+
+        if (file == null)
+            return NotFound("Document not found.");
+
+        return File(
+            file.FileBytes,
+            file.ContentType,
+            file.FileName);
+    }
+
+
     [HttpPost("transfer")]
     public async Task<IActionResult> TransferProperty([FromBody] TransferRequestDto request)
     {
@@ -154,6 +180,15 @@ public class PropertyController : ControllerBase
     public async Task<IActionResult> Dashboard()
     {
         var result = await _propertyService.GetDashboardAsync();
+        return Ok(result);
+    }
+
+    [HttpPost("search")]
+    public async Task<IActionResult> SearchProperties(
+    [FromBody] PropertySearchDto request)
+    {
+        var result = await _propertyService.SearchProperties(request);
+
         return Ok(result);
     }
 }

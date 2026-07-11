@@ -16,11 +16,11 @@ public class LandTrustDbContext : DbContext
 
     public DbSet<TransferRequest> TransferRequests => Set<TransferRequest>();
 
+    public DbSet<PropertyDocument> PropertyDocuments => Set<PropertyDocument>();
+
     public DbSet<User> Users => Set<User>();
 
     public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
-
-    public DbSet<PropertyDocument> PropertyDocuments => Set<PropertyDocument>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
