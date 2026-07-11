@@ -11,7 +11,6 @@ namespace LandTrust.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize]
 public class PropertyController : ControllerBase
 {
     private readonly IPropertyService _propertyService;
@@ -21,6 +20,7 @@ public class PropertyController : ControllerBase
         _propertyService = propertyService;
     }
 
+    [Authorize(Roles = "Citizen")]
     [HttpPost("create")]
     public async Task<IActionResult> CreateProperty([FromBody] CreatePropertyDto request)
     {
@@ -28,6 +28,7 @@ public class PropertyController : ControllerBase
         return Ok(ApiResponse<object>.SuccessResponse(result, "Created"));
     }
 
+    [Authorize(Roles = "Citizen")]
     [HttpPost("upload-document")]
     public async Task<IActionResult> UploadDocument(
     [FromForm] UploadPropertyDocumentDto request)
@@ -40,6 +41,7 @@ public class PropertyController : ControllerBase
         return Ok(result);
     }
 
+    [Authorize]
     [HttpGet("download-document/{documentId}")]
     public async Task<IActionResult> DownloadDocument(Guid documentId)
     {
@@ -55,6 +57,7 @@ public class PropertyController : ControllerBase
     }
 
 
+    [Authorize(Roles = "Citizen")]
     [HttpPost("transfer")]
     public async Task<IActionResult> TransferProperty([FromBody] TransferRequestDto request)
     {
@@ -133,6 +136,7 @@ public class PropertyController : ControllerBase
     //    return Ok(result);
     //}
 
+    [Authorize(Roles = "GovernmentOfficer")]
     [HttpPost("transfer/{requestId}/verify")]
     public async Task<IActionResult> VerifyTransfer(
     Guid requestId,
@@ -145,6 +149,7 @@ public class PropertyController : ControllerBase
         return Ok(result);
     }
 
+    [Authorize(Roles = "GovernmentOfficer")]
     [HttpPost("transfer/{requestId}/approve")]
     public async Task<IActionResult> ApproveTransfer(
         Guid requestId,
@@ -159,6 +164,7 @@ public class PropertyController : ControllerBase
         return Ok(result);
     }
 
+    [Authorize(Roles = "GovernmentOfficer")]
     [HttpPost("transfer/{requestId}/complete")]
     public async Task<IActionResult> CompleteTransfer(Guid requestId)
     {
@@ -183,6 +189,7 @@ public class PropertyController : ControllerBase
         return Ok(result);
     }
 
+    [Authorize(Roles = "Citizen,GovernmentOfficer,Admin")]
     [HttpPost("search")]
     public async Task<IActionResult> SearchProperties(
     [FromBody] PropertySearchDto request)

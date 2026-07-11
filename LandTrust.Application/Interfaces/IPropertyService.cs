@@ -42,5 +42,5 @@ public interface IPropertyService
 
     Task<FileDownloadDto?> DownloadDocument(Guid documentId);
 
-    Task<List<PropertyListDto>> SearchProperties(PropertySearchDto request);
+    Task<PagedResponse<PropertyListDto>> SearchProperties(PropertySearchDto request);
 }

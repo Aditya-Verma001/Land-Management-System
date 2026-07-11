@@ -581,36 +581,28 @@ public class PropertyService : IPropertyService
         };
     }
 
-    public async Task<List<PropertyListDto>> SearchProperties(PropertySearchDto request)
+    public async Task<PagedResponse<PropertyListDto>> SearchProperties(PropertySearchDto request)
     {
         var query = _context.Properties.AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(request.State))
-        {
             query = query.Where(x => x.State.Contains(request.State));
-        }
 
         if (!string.IsNullOrWhiteSpace(request.District))
-        {
             query = query.Where(x => x.District.Contains(request.District));
-        }
 
         if (!string.IsNullOrWhiteSpace(request.Village))
-        {
             query = query.Where(x => x.Village.Contains(request.Village));
-        }
 
         if (!string.IsNullOrWhiteSpace(request.SurveyNumber))
-        {
             query = query.Where(x => x.SurveyNumber.Contains(request.SurveyNumber));
-        }
 
-        query = query
+        var totalRecords = await query.CountAsync();
+
+        var data = await query
             .OrderBy(x => x.CreatedAt)
             .Skip((request.PageNumber - 1) * request.PageSize)
-            .Take(request.PageSize);
-
-        return await query
+            .Take(request.PageSize)
             .Select(x => new PropertyListDto
             {
                 PropertyId = x.PropertyId,
@@ -621,6 +613,15 @@ public class PropertyService : IPropertyService
                 Area = x.Area
             })
             .ToListAsync();
+
+        return new PagedResponse<PropertyListDto>
+        {
+            Data = data,
+            PageNumber = request.PageNumber,
+            PageSize = request.PageSize,
+            TotalRecords = totalRecords,
+            TotalPages = (int)Math.Ceiling((double)totalRecords / request.PageSize)
+        };
     }
 }
 
