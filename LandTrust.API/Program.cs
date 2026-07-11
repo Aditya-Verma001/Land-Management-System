@@ -8,15 +8,49 @@ using LandTrust.Domain.Repositories;
 using LandTrust.Infrastructure.Data;
 using LandTrust.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
-using LandTrust.Application.Common;
+using Microsoft.OpenApi.Models;
+using Microsoft.IdentityModel.Logging;
 
+IdentityModelEventSource.ShowPII = true;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "LandTrust API",
+        Version = "v1"
+    });
+
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Enter: Bearer {your JWT token}"
+    });
+
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+});
 
 builder.Services.AddScoped<IPropertyService, PropertyService>();
 builder.Services.AddScoped<IPropertyRepository, PropertyRepository>();
@@ -31,9 +65,6 @@ builder.Services.AddDbContext<LandTrustDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<IAuditService, AuditService>();
-
-builder.Services.Configure<JwtSettings>(
-    builder.Configuration.GetSection("JwtSettings")); // may be we have to remove it
 
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 
@@ -60,6 +91,31 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             IssuerSigningKey = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(jwtSettings.SecretKey))
         };
+
+        options.Events = new JwtBearerEvents
+        {
+            OnAuthenticationFailed = context =>
+            {
+                Console.WriteLine("=================================");
+                Console.WriteLine(context.Exception.ToString());
+                Console.WriteLine("=================================");
+                return Task.CompletedTask;
+            },
+
+            OnTokenValidated = context =>
+            {
+                Console.WriteLine("TOKEN VALIDATED SUCCESSFULLY");
+                return Task.CompletedTask;
+            },
+
+            OnChallenge = context =>
+            {
+                Console.WriteLine("JWT Challenge:");
+                Console.WriteLine(context.Error);
+                Console.WriteLine(context.ErrorDescription);
+                return Task.CompletedTask;
+            }
+        };
     });
 
 builder.Services.AddAuthorization();
@@ -77,8 +133,8 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllers();
-
 app.UseMiddleware<ExceptionMiddleware>();
+
+app.MapControllers();
 
 app.Run();

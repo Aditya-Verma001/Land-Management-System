@@ -20,6 +20,8 @@ public class LandTrustDbContext : DbContext
 
     public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
 
+    public DbSet<PropertyDocument> PropertyDocuments => Set<PropertyDocument>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -85,6 +87,23 @@ public class LandTrustDbContext : DbContext
 
             entity.Property(x => x.IsActive)
                   .HasDefaultValue(true);
+        });
+
+        modelBuilder.Entity<PropertyDocument>(entity =>
+        {
+            entity.HasKey(x => x.DocumentId);
+
+            entity.Property(x => x.FileName)
+                  .HasMaxLength(255)
+                  .IsRequired();
+
+            entity.Property(x => x.FilePath)
+                  .HasMaxLength(500)
+                  .IsRequired();
+
+            entity.Property(x => x.ContentType)
+                  .HasMaxLength(100)
+                  .IsRequired();
         });
     }
 }

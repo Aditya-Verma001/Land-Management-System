@@ -11,8 +11,5 @@ public class TransferRequestDto
     public Guid PropertyId { get; set; }
 
     [Required]
-    public Guid SellerId { get; set; }
-
-    [Required]
     public Guid BuyerId { get; set; }
 }

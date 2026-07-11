@@ -2,11 +2,16 @@
 using LandTrust.Application.DTOs;
 using LandTrust.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
+
 
 namespace LandTrust.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class PropertyController : ControllerBase
 {
     private readonly IPropertyService _propertyService;
@@ -23,10 +28,21 @@ public class PropertyController : ControllerBase
         return Ok(ApiResponse<object>.SuccessResponse(result, "Created"));
     }
 
+   
     [HttpPost("transfer")]
     public async Task<IActionResult> TransferProperty([FromBody] TransferRequestDto request)
     {
-        var result = await _propertyService.TransferProperty(request);
+        var sellerIdClaim = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+
+        if (string.IsNullOrEmpty(sellerIdClaim))
+        {
+            return Unauthorized("Invalid token.");
+        }
+
+        var sellerId = Guid.Parse(sellerIdClaim);
+
+        var result = await _propertyService.TransferProperty(sellerId, request);
+
         return Ok(result);
     }
 
@@ -133,11 +149,11 @@ public class PropertyController : ControllerBase
         return Ok(result);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpGet("dashboard")]
     public async Task<IActionResult> Dashboard()
     {
         var result = await _propertyService.GetDashboardAsync();
-
         return Ok(result);
     }
 }

@@ -31,7 +31,7 @@ public class PropertyService : IPropertyService
         _fraudService = fraudService;
     }
 
-    public async Task<string> TransferProperty(TransferRequestDto request)
+    public async Task<string> TransferProperty(Guid sellerId, TransferRequestDto request)
     {
         _logger.LogInformation("Transfer started for PropertyId: {PropertyId}", request.PropertyId);
 
@@ -50,9 +50,9 @@ public class PropertyService : IPropertyService
             .FirstOrDefaultAsync();
        
 
-        if (currentOwner == null || currentOwner.OwnerUserId != request.SellerId)
+        if (currentOwner == null || currentOwner.OwnerUserId != sellerId)
         {
-            _logger.LogWarning("Invalid seller. SellerId: {SellerId}", request.SellerId);
+            _logger.LogWarning("Invalid seller. SellerId: {SellerId}", sellerId);
             return "Seller is not the current owner";
         }
             
@@ -62,7 +62,7 @@ public class PropertyService : IPropertyService
         var newOwner = new OwnershipRecord(request.PropertyId, request.BuyerId);
         _context.OwnershipRecords.Add(newOwner);
 
-        if (request.SellerId == request.BuyerId)
+        if (sellerId == request.BuyerId)
             return "Seller and Buyer cannot be same";
 
         if (!currentOwner.IsActive)
@@ -74,7 +74,7 @@ public class PropertyService : IPropertyService
         {
             Action = "Transfer Property",
             Module = "Property",
-            UserId = request.SellerId,
+            UserId = sellerId,
             PropertyId = request.PropertyId,
             Status = "Success",
             Remarks = $"Transferred to {request.BuyerId}"
@@ -86,7 +86,7 @@ public class PropertyService : IPropertyService
 
             Module = "Property",
 
-            UserId = request.SellerId,
+            UserId = sellerId,
 
             PropertyId = request.PropertyId,
 
@@ -96,7 +96,7 @@ public class PropertyService : IPropertyService
         });
 
         _logger.LogInformation("Property transferred from {SellerId} to {BuyerId}",
-        request.SellerId, request.BuyerId);
+       sellerId, request.BuyerId);
 
         return "Property transferred successfully";
     }

@@ -7,7 +7,7 @@ namespace LandTrust.Application.Interfaces;
 
 public interface IPropertyService
 {
-    Task<string> TransferProperty(TransferRequestDto request);
+    Task<string> TransferProperty(Guid sellerId, TransferRequestDto request);
     Task<CreatePropertyResponseDto> CreateProperty(CreatePropertyDto request);
     Task<List<PropertyHistoryDto>> GetPropertyHistory(Guid propertyId);
 
