@@ -625,11 +625,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\adity\\OneDrive\\Desktop\\C#\\LandTrust\\LandTrust.Domain\\LandTrust.Domain.csproj",
+      "projectUniqueName": "C:\\Users\\adity\\OneDrive\\Desktop\\CSharp\\LandTrust\\LandTrust.Domain\\LandTrust.Domain.csproj",
       "projectName": "LandTrust.Domain",
-      "projectPath": "C:\\Users\\adity\\OneDrive\\Desktop\\C#\\LandTrust\\LandTrust.Domain\\LandTrust.Domain.csproj",
+      "projectPath": "C:\\Users\\adity\\OneDrive\\Desktop\\CSharp\\LandTrust\\LandTrust.Domain\\LandTrust.Domain.csproj",
       "packagesPath": "C:\\Users\\adity\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\adity\\OneDrive\\Desktop\\C#\\LandTrust\\LandTrust.Domain\\obj\\",
+      "outputPath": "C:\\Users\\adity\\OneDrive\\Desktop\\CSharp\\LandTrust\\LandTrust.Domain\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

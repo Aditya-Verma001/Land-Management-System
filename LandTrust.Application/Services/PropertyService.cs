@@ -460,10 +460,7 @@ public class PropertyService : IPropertyService
         };
     }
 
-    //public async Task<TransferRequestResponseDto> VerifyTransferRequest(Guid requestId)
-    //{
-    //    throw new NotImplementedException();
-    //}
+    
     public async Task<TransferRequestResponseDto> ApproveTransferRequest(Guid requestId, Guid officerId, string remarks)
     {
         throw new NotImplementedException();
