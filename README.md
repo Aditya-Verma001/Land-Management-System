@@ -176,6 +176,7 @@ This project has helped me gain practical experience in:
 ## 📸 Screenshots
 
 > Screenshots will be added as the project progresses.
+<img width="1886" height="885" alt="Screenshot 2026-07-25 001726" src="https://github.com/user-attachments/assets/2354e3b7-60f2-4a61-8817-4f842c1ed674" />
 
 ---
 
