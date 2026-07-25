@@ -1,65 +1,212 @@
-Blockchain-Based Property Ownership and Verification System
+# 🏡 LandTrust
 
-Overview
-This project presents a blockchain-based system designed to improve the security and transparency of property ownership records. It addresses common issues in traditional land record systems such as fraud, duplicate ownership claims, and lack of reliable verification.
-The system follows a hybrid approach, combining a conventional database with blockchain to ensure data integrity and immutability.
+> A secure and scalable Land Ownership & Property Management System built to modernize land record management and reduce property-related disputes.
 
-Problem Statement
-Traditional land record systems are affected by:
-Centralized and modifiable databases
-Forged or duplicate property records
-Lack of transparency in ownership history
-Slow and manual verification processes
+![Status](https://img.shields.io/badge/Status-Under%20Development-orange)
+![Backend](https://img.shields.io/badge/Backend-ASP.NET%20Core-blue)
+![Database](https://img.shields.io/badge/Database-PostgreSQL-blue)
+![License](https://img.shields.io/badge/License-MIT-green)
 
-These challenges often result in disputes, fraud, and inefficiencies.
+---
 
-Proposed Solution
-The system enables:
-Digital submission of property ownership claims
-Role-based verification by authorized administrators
-Storage of verified ownership data on blockchain
-Secure ownership transfer through controlled workflows
-Transparent and traceable ownership history
+## 📖 Overview
 
-System Architecture
-The system uses a hybrid architecture:
-Off-Chain (SQL Server):
-User data
-Property details
-Documents and verification status
+LandTrust is a backend-driven application designed to simplify and secure land ownership management. The project focuses on solving common issues such as:
 
-On-Chain (Blockchain):
-Property ID
-Owner ID
-Document hash
-Transaction records
-Only essential data is stored on-chain to maintain efficiency.
+- Manual land record management
+- Duplicate ownership claims
+- Property transfer disputes
+- Time-consuming verification processes
+- Lack of transparency in property records
 
-Workflow
-User registration and authentication
-Property claim submission
-Admin verification
-Blockchain record creation
-Ownership transfer
-Ownership history tracking
+The objective is to provide a centralized, secure, and scalable platform for managing property records through modern software engineering practices.
 
-Technology Stack
-Backend: ASP.NET Core (.NET)
-Database: SQL Server
-Blockchain: Permissioned Blockchain (e.g., Hyperledger Fabric)
-Authentication: JWT
+---
 
-Key Features
-Secure authentication and role-based access
-Property claim and verification workflow
-Blockchain-based record storage
-Ownership transfer mechanism
-Transparent ownership history
+## 🚀 Features
 
-Team Members
-Aditya Verma
-Keshav Singh
-Suryansh Chaturvedi
+### ✅ Current Features
 
-Conclusion
-This project demonstrates the use of blockchain as a trust layer in property management systems, ensuring secure, transparent, and tamper-resistant ownership records.
+- User Authentication
+- Property Registration
+- Property Management
+- Ownership Management
+- Property Transfer Workflow
+- Property History Tracking
+- Search & Filter Properties
+- RESTful APIs
+- Swagger API Documentation
+- PostgreSQL Database Integration
+- Entity Framework Core
+- Audit Logs
+- Role-Based Access Control (RBAC)
+- Digital Document Upload & Verification
+- Fraud Detection Module
+
+---
+
+## 🚧 Upcoming Features
+
+- GIS / Map Integration
+- Email Notifications
+- Analytics Dashboard
+- Microsoft Azure Cloud Deployment
+- Performance Optimization
+
+---
+
+## 🛠 Tech Stack
+
+### Backend
+
+- ASP.NET Core Web API
+- C#
+- Entity Framework Core
+
+### Database
+
+- PostgreSQL
+
+### API Documentation
+
+- Swagger (OpenAPI)
+
+### Tools
+
+- Visual Studio
+- Git & GitHub
+- Postman
+- pgAdmin
+
+---
+
+## 📂 Project Structure
+
+```
+LandTrust
+│
+├── Controllers
+├── Services
+├── Repositories
+├── Models
+├── DTOs
+├── Data
+├── Migrations
+├── Middleware
+├── Configuration
+└── Program.cs
+```
+
+---
+
+## 🏗 Architecture
+
+The project follows a layered architecture to ensure maintainability and scalability.
+
+```
+Client
+   │
+REST API
+   │
+Controllers
+   │
+Services
+   │
+Repositories
+   │
+Entity Framework Core
+   │
+PostgreSQL
+```
+
+---
+
+## 📌 API Modules
+
+- Authentication
+- Users
+- Properties
+- Property Transfers
+- Ownership Records
+- Property History
+
+---
+
+## 🔒 Security
+
+- Input Validation
+- Exception Handling
+- Secure API Design
+- Data Integrity
+- Authentication (In Progress)
+- Authorization (Upcoming)
+
+---
+
+## 💡 Why LandTrust?
+
+Land ownership systems in many regions still rely on manual documentation, making them vulnerable to fraud and ownership disputes.
+
+LandTrust aims to digitize and simplify property management by providing:
+
+- Secure ownership records
+- Transparent property transfers
+- Faster verification
+- Reduced paperwork
+- Better data management
+
+---
+
+## 🎯 Learning Outcomes
+
+This project has helped me gain practical experience in:
+
+- REST API Development
+- ASP.NET Core Web API
+- Database Design
+- Entity Framework Core
+- PostgreSQL
+- Software Architecture
+- Backend Development
+- API Documentation
+- Git Version Control
+
+---
+
+## 📸 Screenshots
+
+> Screenshots will be added as the project progresses.
+
+---
+
+## ☁ Future Scope
+
+- Azure App Service Deployment
+- Azure Database for PostgreSQL
+- Azure Blob Storage
+- Admin Dashboard
+- AI-based Fraud Detection
+- Property Analytics
+- Mobile Application Support
+
+---
+
+## 🤝 Contributing
+
+Contributions, suggestions, and feedback are always welcome.
+
+Feel free to fork the repository and open a Pull Request.
+
+---
+
+## 👨‍💻 Author
+
+**Aditya Verma**
+
+Computer Science Engineering Student
+
+
+
+---
+
+⭐ If you found this project interesting, don't forget to Star the repository!
